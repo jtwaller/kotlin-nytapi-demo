@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import com.jtwaller.nytarticlesearchdemo.api.ArticleSearchObject
 import com.jtwaller.nytarticlesearchdemo.api.NytRestApi
-import com.jtwaller.nytarticlesearchdemo.di.DaggerNetworkComponent
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
