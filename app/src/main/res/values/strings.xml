@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NYT Article Search Demo</string>
+    <string name="search_query">Search Query</string>
+    <string name="search_hint">Search for articles</string>
 </resources>
