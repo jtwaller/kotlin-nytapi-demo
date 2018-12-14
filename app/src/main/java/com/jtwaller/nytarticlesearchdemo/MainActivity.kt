@@ -19,9 +19,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var listView: ListView
 
     @Inject
-    lateinit var viewModelFactory: ViewModelFactory<MainViewModel>
+    lateinit var viewModelFactory: ViewModelFactory<ArticlesViewModel>
     private val mainViewModel by androidLazy {
-        getViewModel<MainViewModel>(viewModelFactory)
+        getViewModel<ArticlesViewModel>(viewModelFactory)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

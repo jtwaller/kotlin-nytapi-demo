@@ -12,7 +12,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class MainViewModel @Inject constructor(val api: NytRestApi): ViewModel() {
+class ArticlesViewModel @Inject constructor(val api: NytRestApi): ViewModel() {
 
     private lateinit var articles: MutableLiveData<List<NytArticle>>
 
@@ -30,11 +30,11 @@ class MainViewModel @Inject constructor(val api: NytRestApi): ViewModel() {
                 .subscribeOn(Schedulers.io())
                 .subscribe(object: Observer<ArticleSearchObject> {
                     override fun onComplete() {
-                        Log.d(MainActivity.TAG, ": complete")
+                        // no-op
                     }
 
                     override fun onSubscribe(d: Disposable) {
-                        Log.d(MainActivity.TAG, ": subbed")
+                        // no-op
                     }
 
                     override fun onNext(t: ArticleSearchObject) {
@@ -55,7 +55,8 @@ class MainViewModel @Inject constructor(val api: NytRestApi): ViewModel() {
                     }
 
                     override fun onError(e: Throwable) {
-                        Log.d(MainActivity.TAG, ": error -> " + e.printStackTrace())
+                        // TODO: Error handling
+                        // no-op
                     }
                 })
     }
