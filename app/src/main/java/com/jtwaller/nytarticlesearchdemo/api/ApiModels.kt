@@ -25,5 +25,5 @@ class ArticleSearchHeadline(
 class ArticleSearchMultimedia(
         val type: String,
         val subtype: String,
-        val url: String
+        val url: String?
 )

@@ -1,8 +1,10 @@
 package com.jtwaller.nytarticlesearchdemo
 
+import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
+import android.widget.ListView
 import android.widget.SearchView
 import com.jtwaller.nytarticlesearchdemo.di.ViewModelFactory
 import javax.inject.Inject
@@ -14,6 +16,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     lateinit var searchView: SearchView
+    lateinit var listView: ListView
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory<MainViewModel>
@@ -26,8 +29,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         NytApp.networkComponent.inject(this)
+        listView = findViewById(R.id.list_view)
 
-        mainViewModel.getArticles("godzilla")
+        loadArticles("godzilla")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -49,6 +53,13 @@ class MainActivity : AppCompatActivity() {
         })
 
         return true
+    }
+
+    fun loadArticles(query: String, page: Int = 0) {
+        mainViewModel.getArticles(query, page).observe(this, Observer<List<NytArticle>>{ articles ->
+            if (articles == null) return@Observer
+            listView.adapter = ArticleListAdapter(this, articles)
+        })
     }
 
 }

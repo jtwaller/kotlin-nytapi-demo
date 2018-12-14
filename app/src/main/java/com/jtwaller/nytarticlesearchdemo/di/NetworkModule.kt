@@ -35,7 +35,7 @@ class NetworkModule {
     @Singleton
     fun provideOkHttpClient(apiKeyInterceptor: Interceptor): OkHttpClient {
         return OkHttpClient.Builder()
-                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
                 .addInterceptor(apiKeyInterceptor)
                 .build()
     }

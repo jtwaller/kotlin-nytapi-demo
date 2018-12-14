@@ -40,9 +40,18 @@ class MainViewModel @Inject constructor(val api: NytRestApi): ViewModel() {
                     override fun onNext(t: ArticleSearchObject) {
                         Log.d(MainActivity.TAG, ": next")
 
-                        for (doc in t.response.docs) {
-                            Log.d("viewmodel", ": " + doc.headline.main)
-                        }
+                        articles.postValue(t.response.docs.map { doc ->
+                            val thumbs = doc.multimedia.filter { image -> image.subtype == "thumbnail" }
+                            var thumb: String? = null
+                            if (!thumbs.isEmpty()) {
+                                thumb = "https://www.nytimes.com/" + thumbs.get(0).url
+                            }
+
+                            val title = doc.headline.main
+                            val url = doc.webUrl
+
+                            NytArticle(thumb, title, url)
+                        })
                     }
 
                     override fun onError(e: Throwable) {
