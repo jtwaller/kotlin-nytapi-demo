@@ -1,16 +1,10 @@
 package com.jtwaller.nytarticlesearchdemo
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.widget.SearchView
-import com.jtwaller.nytarticlesearchdemo.api.ArticleSearchObject
-import com.jtwaller.nytarticlesearchdemo.api.NytRestApi
-import io.reactivex.Observer
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import com.jtwaller.nytarticlesearchdemo.di.ViewModelFactory
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -19,15 +13,21 @@ class MainActivity : AppCompatActivity() {
         const val TAG = "MainActivity"
     }
 
-    @Inject
-    lateinit var nytRestApi: NytRestApi
     lateinit var searchView: SearchView
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory<MainViewModel>
+    private val mainViewModel by androidLazy {
+        getViewModel<MainViewModel>(viewModelFactory)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         NytApp.networkComponent.inject(this)
+
+        mainViewModel.getArticles("godzilla")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -40,28 +40,6 @@ class MainActivity : AppCompatActivity() {
                 if (p0 == null) return false
 
                 searchView.clearFocus()
-
-                nytRestApi.getArticles(p0)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(object: Observer<ArticleSearchObject> {
-                            override fun onComplete() {
-                                Log.d(TAG, ": complete")
-                            }
-
-                            override fun onSubscribe(d: Disposable) {
-                                Log.d(TAG, ": subbed")
-                            }
-
-                            override fun onNext(t: ArticleSearchObject) {
-                                Log.d(TAG, ": next")
-                            }
-
-                            override fun onError(e: Throwable) {
-                                Log.d(TAG, ": error -> " + e.printStackTrace())
-                            }
-                        })
-
                 return true
             }
 
