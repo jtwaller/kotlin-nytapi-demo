@@ -2,10 +2,10 @@ package com.jtwaller.nytarticlesearchdemo
 
 import android.arch.lifecycle.Observer
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.Menu
 import android.widget.SearchView
 import com.jtwaller.nytarticlesearchdemo.di.ViewModelFactory
@@ -68,7 +68,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun launchArticleDetailActivity(context: Context, url: String) {
-        Log.d(TAG, ": launch this url" + url)
+        val intent = Intent(context, ArticleDetailActivity::class.java)
+        intent.putExtra("url", url)
+
+        startActivity(intent)
     }
 
 }
