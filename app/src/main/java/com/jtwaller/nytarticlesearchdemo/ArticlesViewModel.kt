@@ -14,18 +14,14 @@ import javax.inject.Inject
 
 class ArticlesViewModel @Inject constructor(val api: NytRestApi): ViewModel() {
 
-    private lateinit var articles: MutableLiveData<List<NytArticle>>
+    var articles: MutableLiveData<List<NytArticle>> = MutableLiveData()
 
-    fun getArticles(query: String, page: Int = 0): LiveData<List<NytArticle>> {
-        if (!::articles.isInitialized) {
-            articles = MutableLiveData()
-            loadArticles(query, page)
-        }
-
-        return articles
+    init {
+        getArticles("godzilla")
     }
 
-    private fun loadArticles(query: String, page: Int) {
+    fun getArticles(query: String, page: Int = 0) {
+
         api.getArticles(query, page).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(object: Observer<ArticleSearchObject> {
@@ -60,4 +56,5 @@ class ArticlesViewModel @Inject constructor(val api: NytRestApi): ViewModel() {
                     }
                 })
     }
+
 }

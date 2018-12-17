@@ -1,12 +1,15 @@
 package com.jtwaller.nytarticlesearchdemo
 
 import android.arch.lifecycle.Observer
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.Menu
-import android.widget.ListView
 import android.widget.SearchView
 import com.jtwaller.nytarticlesearchdemo.di.ViewModelFactory
+import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -15,23 +18,31 @@ class MainActivity : AppCompatActivity() {
         const val TAG = "MainActivity"
     }
 
-    lateinit var searchView: SearchView
-    lateinit var listView: ListView
-
     @Inject
     lateinit var viewModelFactory: ViewModelFactory<ArticlesViewModel>
-    private val mainViewModel by androidLazy {
+    private val articlesViewModel by androidLazy {
         getViewModel<ArticlesViewModel>(viewModelFactory)
     }
+
+    lateinit var searchView: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         NytApp.networkComponent.inject(this)
-        listView = findViewById(R.id.list_view)
 
-        loadArticles("godzilla")
+        val adapter = ArticleListAdapter {
+            launchArticleDetailActivity(this@MainActivity, it.url)
+        }
+
+        article_recycler_view.layoutManager = LinearLayoutManager(this)
+        article_recycler_view.adapter = adapter
+
+        articlesViewModel.articles.observe(this, Observer {
+            adapter.loadItems(it ?: emptyList())
+            adapter.notifyDataSetChanged()
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -44,6 +55,8 @@ class MainActivity : AppCompatActivity() {
                 if (p0 == null) return false
 
                 searchView.clearFocus()
+                articlesViewModel.getArticles(p0)
+
                 return true
             }
 
@@ -51,15 +64,11 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
         })
-
         return true
     }
 
-    fun loadArticles(query: String, page: Int = 0) {
-        mainViewModel.getArticles(query, page).observe(this, Observer<List<NytArticle>>{ articles ->
-            if (articles == null) return@Observer
-            listView.adapter = ArticleListAdapter(this, articles)
-        })
+    private fun launchArticleDetailActivity(context: Context, url: String) {
+        Log.d(TAG, ": launch this url" + url)
     }
 
 }
