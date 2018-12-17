@@ -1,12 +1,13 @@
-package com.jtwaller.nytarticlesearchdemo
+package com.jtwaller.nytarticlesearchdemo.recyclerview
 
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.jtwaller.nytarticlesearchdemo.models.NytArticle
+import com.jtwaller.nytarticlesearchdemo.R
 import com.squareup.picasso.Picasso
 
 class ArticleListAdapter(val onClick: (NytArticle) -> Unit): RecyclerView.Adapter<ArticleListAdapter.ArticleViewHolder>() {

@@ -3,7 +3,7 @@ package com.jtwaller.nytarticlesearchdemo.api
 import com.google.gson.annotations.SerializedName
 
 class ArticleSearchObject(
-        val status: String,
+        val status: String, // TODO: Error handling
         val response: ArticleSearchResponse
 )
 
@@ -23,7 +23,6 @@ class ArticleSearchHeadline(
 )
 
 class ArticleSearchMultimedia(
-        val type: String,
         val subtype: String,
         val url: String?
 )

@@ -1,4 +1,4 @@
-package com.jtwaller.nytarticlesearchdemo
+package com.jtwaller.nytarticlesearchdemo.commons
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider

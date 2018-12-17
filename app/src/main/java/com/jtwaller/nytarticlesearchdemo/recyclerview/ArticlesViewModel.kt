@@ -1,9 +1,8 @@
-package com.jtwaller.nytarticlesearchdemo
+package com.jtwaller.nytarticlesearchdemo.recyclerview
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.util.Log
+import com.jtwaller.nytarticlesearchdemo.models.NytArticle
 import com.jtwaller.nytarticlesearchdemo.api.ArticleSearchObject
 import com.jtwaller.nytarticlesearchdemo.api.NytRestApi
 import io.reactivex.Observer
@@ -26,16 +25,16 @@ class ArticlesViewModel @Inject constructor(val api: NytRestApi): ViewModel() {
                 .subscribeOn(Schedulers.io())
                 .subscribe(object: Observer<ArticleSearchObject> {
                     override fun onComplete() {
+                        // TODO: Dismiss loading indicator
                         // no-op
                     }
 
                     override fun onSubscribe(d: Disposable) {
+                        // TODO: Create loading indicator
                         // no-op
                     }
 
                     override fun onNext(t: ArticleSearchObject) {
-                        Log.d(MainActivity.TAG, ": next")
-
                         articles.postValue(t.response.docs.map { doc ->
                             val thumbs = doc.multimedia.filter { image -> image.subtype == "thumbnail" }
                             var thumb: String? = null

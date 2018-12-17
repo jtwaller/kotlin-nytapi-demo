@@ -1,4 +1,4 @@
-package com.jtwaller.nytarticlesearchdemo
+package com.jtwaller.nytarticlesearchdemo.models
 
 data class NytArticle(
         val thumbnail: String?,

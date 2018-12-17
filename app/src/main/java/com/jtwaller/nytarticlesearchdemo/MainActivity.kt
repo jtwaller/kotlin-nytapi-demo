@@ -8,15 +8,15 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.widget.SearchView
+import com.jtwaller.nytarticlesearchdemo.commons.androidLazy
+import com.jtwaller.nytarticlesearchdemo.commons.getViewModel
 import com.jtwaller.nytarticlesearchdemo.di.ViewModelFactory
+import com.jtwaller.nytarticlesearchdemo.recyclerview.ArticleListAdapter
+import com.jtwaller.nytarticlesearchdemo.recyclerview.ArticlesViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
-
-    companion object {
-        const val TAG = "MainActivity"
-    }
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory<ArticlesViewModel>
@@ -38,6 +38,8 @@ class MainActivity : AppCompatActivity() {
 
         article_recycler_view.layoutManager = LinearLayoutManager(this)
         article_recycler_view.adapter = adapter
+
+        // TODO: Implement loading indicator when loading articles
 
         articlesViewModel.articles.observe(this, Observer {
             adapter.loadItems(it ?: emptyList())
