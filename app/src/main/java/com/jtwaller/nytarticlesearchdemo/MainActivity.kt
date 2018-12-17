@@ -2,12 +2,18 @@ package com.jtwaller.nytarticlesearchdemo
 
 import android.arch.lifecycle.Observer
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.text.InputType
 import android.view.Menu
+import android.widget.Button
+import android.widget.EditText
 import android.widget.SearchView
+import android.widget.TextView
 import com.jtwaller.nytarticlesearchdemo.commons.androidLazy
 import com.jtwaller.nytarticlesearchdemo.commons.getViewModel
 import com.jtwaller.nytarticlesearchdemo.di.ViewModelFactory
@@ -24,11 +30,13 @@ class MainActivity : AppCompatActivity() {
         getViewModel<ArticlesViewModel>(viewModelFactory)
     }
 
+    lateinit var currentPageView: TextView
     lateinit var searchView: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        currentPageView = findViewById(R.id.current_page)
 
         NytApp.networkComponent.inject(this)
 
@@ -42,9 +50,30 @@ class MainActivity : AppCompatActivity() {
         // TODO: Implement loading indicator when loading articles
 
         articlesViewModel.articles.observe(this, Observer {
+            currentPageView.text = articlesViewModel.currentPage.toString()
             adapter.loadItems(it ?: emptyList())
             adapter.notifyDataSetChanged()
         })
+
+        findViewById<Button>(R.id.change_page).setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            val editText = EditText(this)
+            editText.inputType = InputType.TYPE_CLASS_NUMBER
+
+            builder.setTitle(R.string.new_page_prompt)
+            builder.setView(editText)
+
+            builder.setPositiveButton(android.R.string.ok, DialogInterface.OnClickListener() { _, _ ->
+                articlesViewModel.changePage(editText.text.toString().toInt()) // TODO: Input validation
+                currentPageView.text = articlesViewModel.currentPage.toString()
+            })
+
+            builder.setNegativeButton(android.R.string.cancel, DialogInterface.OnClickListener() { _, _ ->
+                // no-op
+            })
+
+            builder.show()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -3,4 +3,7 @@
     <string name="search_query">Search Query</string>
     <string name="search_hint">Search for articles</string>
     <string name="share">Share</string>
+    <string name="current_page">Current Page:</string>
+    <string name="change_page">Change Page</string>
+    <string name="new_page_prompt">Enter new page number</string>
 </resources>

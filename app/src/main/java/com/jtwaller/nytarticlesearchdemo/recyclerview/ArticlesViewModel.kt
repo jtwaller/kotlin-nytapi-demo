@@ -14,12 +14,16 @@ import javax.inject.Inject
 class ArticlesViewModel @Inject constructor(val api: NytRestApi): ViewModel() {
 
     var articles: MutableLiveData<List<NytArticle>> = MutableLiveData()
+    var query = "godzilla"
+    var currentPage: Int = 0
 
     init {
-        getArticles("godzilla")
+        getArticles(query)
     }
 
-    fun getArticles(query: String, page: Int = 0) {
+    fun getArticles(newQuery: String, page: Int = 0) {
+        query = newQuery
+        currentPage = page
 
         api.getArticles(query, page).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -54,6 +58,10 @@ class ArticlesViewModel @Inject constructor(val api: NytRestApi): ViewModel() {
                         // no-op
                     }
                 })
+    }
+
+    fun changePage(page: Int) {
+        getArticles(query, page)
     }
 
 }
