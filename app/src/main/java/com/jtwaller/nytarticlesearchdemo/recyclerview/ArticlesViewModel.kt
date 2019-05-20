@@ -17,11 +17,17 @@ class ArticlesViewModel @Inject constructor(val api: NytRestApi): ViewModel() {
     var query = "godzilla"
     var currentPage: Int = 0
 
-    fun getArticles(newQuery: String, page: Int = 0, apiKey: String) {
+    private val API_KEY: String = YOUR_KEY_HERE
+
+    init {
+        getArticles(query)
+    }
+
+    fun getArticles(newQuery: String, page: Int = 0) {
         query = newQuery
         currentPage = page
 
-        api.getArticles(query, page, apiKey).observeOn(AndroidSchedulers.mainThread())
+        api.getArticles(query, page, API_KEY).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(object: Observer<ArticleSearchObject> {
                     override fun onComplete() {
@@ -56,8 +62,8 @@ class ArticlesViewModel @Inject constructor(val api: NytRestApi): ViewModel() {
                 })
     }
 
-    fun changePage(page: Int, apiKey: String) {
-        getArticles(query, page, apiKey)
+    fun changePage(page: Int) {
+        getArticles(query, page)
     }
 
 }
