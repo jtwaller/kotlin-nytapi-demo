@@ -30,13 +30,16 @@ class MainActivity : AppCompatActivity() {
         getViewModel<ArticlesViewModel>(viewModelFactory)
     }
 
-    lateinit var currentPageView: TextView
-    lateinit var searchView: SearchView
+    private lateinit var currentPageView: TextView
+    private lateinit var searchView: SearchView
+    private lateinit var apiKey: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         currentPageView = findViewById(R.id.current_page)
+
+        apiKey = resources.getString(R.string.nyt_api_key)
 
         NytApp.networkComponent.inject(this)
 
@@ -64,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             builder.setView(editText)
 
             builder.setPositiveButton(android.R.string.ok, DialogInterface.OnClickListener() { _, _ ->
-                articlesViewModel.changePage(editText.text.toString().toInt()) // TODO: Input validation
+                articlesViewModel.changePage(editText.text.toString().toInt(), apiKey) // TODO: Input validation
                 currentPageView.text = articlesViewModel.currentPage.toString()
             })
 
@@ -74,6 +77,8 @@ class MainActivity : AppCompatActivity() {
 
             builder.show()
         }
+
+        articlesViewModel.getArticles("godzilla", 0, apiKey)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -86,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                 if (p0 == null) return false
 
                 searchView.clearFocus()
-                articlesViewModel.getArticles(p0)
+                articlesViewModel.getArticles(p0, 0, apiKey)
 
                 return true
             }

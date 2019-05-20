@@ -1,11 +1,8 @@
 package com.jtwaller.nytarticlesearchdemo.di
 
-import android.content.Context
-import com.jtwaller.nytarticlesearchdemo.R
 import com.jtwaller.nytarticlesearchdemo.api.NytApi
 import dagger.Module
 import dagger.Provides
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -33,27 +30,10 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(apiKeyInterceptor: Interceptor): OkHttpClient {
+    fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
-                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
-                .addInterceptor(apiKeyInterceptor)
+                .addNetworkInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS))
                 .build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideApiKeyInterceptor(context: Context): Interceptor {
-        return Interceptor { chain ->
-            val apiKey = context.getString(R.string.nyt_api_key)
-
-            val request = chain
-                    .request()
-                    .newBuilder()
-                    .addHeader("api-key", apiKey)
-                    .build()
-
-            chain.proceed(request)
-        }
     }
 
 }
